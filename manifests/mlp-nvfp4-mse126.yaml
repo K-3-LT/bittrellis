@@ -1,0 +1,16 @@
+schema: bittrellis/manifest@2
+track: HPC-01
+name: mlp-nvfp4-mse126
+description: >
+  Keep all execution formats NVFP4 and replace MLP weight encoding in layers 0-3 with a deterministic
+  exhaustive search over 126 positive finite E4M3 block scales, holding the max tensor scale fixed.
+  Minimize weight reconstruction error without calibration inputs or cross-tensor transformations.
+  Hypothesis: improved weight bytes may improve fidelity while retaining native FP4 prefill.
+  Full-model quality, performance and holdout are not measured locally.
+authors: [K-3-LT]
+default: NVFP4
+rules:
+  - match: "L*.mlp"
+    layers: "0-3"
+    format: NVFP4
+    quantizer: mse126
