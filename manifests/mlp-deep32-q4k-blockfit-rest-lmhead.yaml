@@ -1,0 +1,24 @@
+schema: bittrellis/manifest@2
+track: HPC-01
+name: mlp-deep32-q4k-blockfit-rest-lmhead
+authors:
+- K-3-LT
+description: Keep all recurrent and attention projections on approved blockfit NVFP4.
+  Convert only the deep-half MLP to Q4_K for lower resident GPU weights, retaining
+  native shallow MLP prefill. Fit lm_head as Q4_K.
+default: NVFP4
+rules:
+- match: L*.mlp
+  format: NVFP4
+  quantizer: nvfp4_blockfit
+- match: L*.attn.*
+  format: NVFP4
+  quantizer: nvfp4_blockfit
+- match: L*.gdn.*
+  format: NVFP4
+  quantizer: nvfp4_blockfit
+- match: L*.mlp
+  layers: 32-63
+  format: Q4_K
+modules:
+  lm_head: Q4_K
